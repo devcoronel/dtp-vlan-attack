@@ -1,0 +1,36 @@
+DETALLES
+
+Este ataque aprovecha la siguiente vulnerabilidad:
+- Interfaz g0/3 de SW1 enviando mensajes DTP
+
+Es decir, se dejó la configuración por defecto
+del switch para la formación de enlaces troncales
+(dynamic auto). Se puede verificar con el comando
+show interface g0/3 switchport
+
+Kali recibe este mensaje DTP , modifica la MAC
+de origen para que al enviar el mensaje esta nueva
+MAC se haga pasar por la MAC de Kali.
+Se modifica el mensaje para aceptar la propuesta
+de enlace troncal que DTP hace, y se forma un enlace
+troncal entre SW1 y Kali.
+
+Cualquier mensaje Broadcast que se mande a la red
+se enviará por los enlaces troncales y podrá ser
+capturado por Kali.
+
+Solo los mensajes Broadcast podrán ser capturados.
+Para poder capturar mensajes unicast habría que
+preparar otro tipo de ataque: VLAN Hopping Attack
+
+SOLUCIÓN:
+Este ataque se puede evitar deshabilitando la formación
+automática de enlaces troncales (Deshabilitando DTP).
+Primero quitando el modo dynamic (auto).
+Luego no permitiendo la nenogiación con mensajes DTP
+
+En SW1:
+conf t
+int g0/3
+switchport mode access
+switchport nonegotiate
